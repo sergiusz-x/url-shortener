@@ -1,10 +1,9 @@
 const express = require("express")
 const https = require('https')
 const http = require('http')
+const { port_http, port_https, redirect_url_not_found, short_url_allowed_characters, short_url_length, create_request_limiter } = require("./config")
 //
 const app = express()
-const port_http = 3000
-const port_https = 3001
 //
 const https_server = https.createServer(app)
 const http_server = http.createServer(app)
@@ -12,28 +11,36 @@ const http_server = http.createServer(app)
 app.use(express.json())
 //
 //
-const { connect_mongodb, find_short_url, insert_short_url } = require("./database")
-const { start_short_url_generator, get_random_short_url } = require("./short_url_generator")
+const { connect_mongodb, find_url, insert_short_url, update_document_stats } = require("./database")
+const { start_random_string_generator, get_random_short_url } = require("./short_url_generator")
 //
 connect_mongodb().then(() => {
     //
-    start_short_url_generator()
+    start_random_string_generator()
+    update_document_stats()
     //
 })
 //
 //
 //
-app.get("/:SHORT_URL", async (req, res) => {
+const reserved_links = [redirect_url_not_found.substring(1)]
+app.get("/:SHORT_URL", async (req, res, next) => {
     const { SHORT_URL } = req.params
     if(!SHORT_URL) return send_error(res, 404)
     //
-    const find = await find_short_url(SHORT_URL)
+    if(reserved_links.includes(SHORT_URL)) return next()
+    if(SHORT_URL.length != short_url_length || !validate_short_url_string(SHORT_URL)) return res.redirect(308, redirect_url_not_found)
+    //
+    const find = await find_url(SHORT_URL, undefined, true)
     //
     if(find) {
         res.redirect(307, find.long_url)
+    } else {
+        res.redirect(308, redirect_url_not_found)
     }
 })
 //
+let map_request_counter = new Map()
 app.post("/create", async (req, res) => {
     const ans = {
         success: false,
@@ -43,7 +50,21 @@ app.post("/create", async (req, res) => {
     const document = {
         short_url: "",
         long_url: "",
-        expiration_timestamp: Date.now() + 1000 * 60 * 60 * 24 * 365 * 1 // 1 year 
+        expiration_timestamp: Date.now() + 1000 * 60 * 60 * 24 * 365 * 1, // 1 year
+        uses: 0,
+        max_uses: -1
+    }
+    //
+    let ip_request_count = map_request_counter.get(req.ip) || 0
+    if(ip_request_count >= create_request_limiter.max) {
+        ans.message = "Too many requests"
+        return send_error(res, 400, ans)
+    } else {
+        map_request_counter.set(req.ip, ip_request_count+1)
+        setTimeout(() => {
+            ip_request_count = map_request_counter.get(req.ip) || 1
+            map_request_counter.set(req.ip, ip_request_count-1)
+        }, create_request_limiter.time);
     }
     //
     if(!req.body?.url) {
@@ -57,12 +78,29 @@ app.post("/create", async (req, res) => {
     }
     //
     //
-    /* SPRAWDZIĆ CZY LINK JEST JUŻ W BAZIE DANYCH, JEŚLI TAK TO ZWRÓCIĆ DANE Z TEGO DOKUMENTU I ZAKTUALIZOWAĆ DATE WYGAŚNIĘCIA */
+    const check_if_exist = await find_url(undefined, req.body.url)
+    if(check_if_exist) {
+        ans.success = true
+        ans.message = "This short URL is already created"
+        ans.result = check_if_exist.short_url
+        return res.status(200).json(ans)
+    }
     //
     //
     const short_url = await get_random_short_url()
     document.short_url = short_url
-    document.long_url = req.body?.url
+    document.long_url = req.body.url
+    //
+    if(req.body.expiration_timestamp && !isNaN(req.body.expiration_timestamp)) {
+        if(req.body.expiration_timestamp > Date.now() && req.body.expiration_timestamp < document.expiration_timestamp) {
+            document.expiration_timestamp = req.body.expiration_timestamp
+        }
+    }
+    if(req.body.max_uses && !isNaN(req.body.max_uses)) {
+        if(req.body.max_uses > 0) {
+            document.max_uses = req.body.max_uses
+        }
+    }
     //
     const save_in_db = await insert_short_url(document)
     //
@@ -73,16 +111,30 @@ app.post("/create", async (req, res) => {
     res.status(200).json(ans)
 })
 //
+app.post("/stats/:SHORT_URL", (req, res) => {
+    const { SHORT_URL } = req.params
+    console.log(SHORT_URL)
+})
+//
 app.get("*", (req, res) => {
     send_error(res, 404)
 })
 //
 function validate_url(url) {
-    if(!url.startsWith("http")) return false
+    // if(!url.startsWith("http")) return false
     if(!url.includes(".")) return false
     if(url.split(".")[0].length == 0 || url.split(".")[1].length == 0) return false
     if(url.split(".").reverse()[0].length == 0) return false
     return true
+}
+//
+function validate_short_url_string(short_url_string) {
+    let pass = true
+    short_url_string.split("").forEach(char => {
+        if(!short_url_allowed_characters.includes(char)) return pass = false
+    })
+    //
+    return pass
 }
 //
 function send_error(res, code, ans) {
@@ -93,7 +145,7 @@ function send_error(res, code, ans) {
         return res.json(ans)
     }
     //
-    res.send("Error ???")
+    res.send("Error 500")
 }
 //
 http_server.listen(port_http, () => {
