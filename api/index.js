@@ -21,6 +21,12 @@ connect_mongodb().then(() => {
     //
 })
 //
+/*
+To-Do List:
+- estetyka kodu
+- komentarze
+- integracja z frontendem
+*/
 //
 //
 const reserved_links = [redirect_url_not_found.substring(1)]
@@ -111,9 +117,40 @@ app.post("/create", async (req, res) => {
     res.status(200).json(ans)
 })
 //
-app.post("/stats/:SHORT_URL", (req, res) => {
+app.post("/stats/:SHORT_URL", async (req, res) => {
     const { SHORT_URL } = req.params
-    console.log(SHORT_URL)
+    //
+    let ans = {
+        success: false,
+        message: "",
+        short_url: "",
+        long_url: "",
+        expiration_timestamp: 0,
+        uses: 0,
+        max_uses: -1
+    }
+    //
+    if(!SHORT_URL || SHORT_URL.length != short_url_length || !validate_short_url_string(SHORT_URL)) {
+        ans.message = "Invalid short URL"
+        return send_error(res, 400, ans)
+    }
+    //
+    const document = await find_url(SHORT_URL)
+    //
+    if(!document) {
+        ans.message = "Short URL not found"
+        return send_error(res, 400, ans)
+    }
+    //
+    ans.success = true
+    ans.message = "Short URL found"
+    ans.short_url = SHORT_URL
+    ans.long_url = document.long_url
+    ans.expiration_timestamp = document.expiration_timestamp
+    ans.uses = document.uses
+    ans.max_uses = document.max_uses
+    //
+    res.status(200).json(ans)
 })
 //
 app.get("*", (req, res) => {
