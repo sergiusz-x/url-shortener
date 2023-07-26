@@ -1,3 +1,4 @@
+// This file makes sure that the system always has URL shortcodes available
 const short_urls = []
 //
 const { find_url } = require("./database")

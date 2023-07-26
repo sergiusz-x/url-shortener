@@ -21,13 +21,6 @@ connect_mongodb().then(() => {
     //
 })
 //
-/*
-To-Do List:
-- estetyka kodu
-- komentarze
-- integracja z frontendem
-*/
-//
 //
 const reserved_links = [redirect_url_not_found.substring(1)]
 app.get("/:SHORT_URL", async (req, res, next) => {
@@ -108,7 +101,7 @@ app.post("/create", async (req, res) => {
         }
     }
     //
-    const save_in_db = await insert_short_url(document)
+    await insert_short_url(document)
     //
     ans.success = true
     ans.message = "Successfully created new short url"
