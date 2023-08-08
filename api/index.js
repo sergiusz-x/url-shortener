@@ -1,7 +1,8 @@
 const express = require("express")
 const https = require('https')
 const http = require('http')
-const { port_http, port_https, redirect_url_not_found, short_url_allowed_characters, short_url_length, create_request_limiter } = require("./config")
+const path = require('path');
+const { port_http, port_https, redirect_url_not_found, short_url_allowed_characters, short_url_length, create_request_limiter, website_location, host_website } = require("./config")
 //
 const app = express()
 //
@@ -9,6 +10,13 @@ const https_server = https.createServer(app)
 const http_server = http.createServer(app)
 //
 app.use(express.json())
+//
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    next()
+})
 //
 //
 const { connect_mongodb, find_url, insert_short_url, update_document_stats } = require("./database")
@@ -21,8 +29,15 @@ connect_mongodb().then(() => {
     //
 })
 //
+if(host_website) {
+    app.use(express.static(path.resolve(`${__dirname}/${website_location}`)));
+    app.use(express.static("public"));
+    app.get("/", (req, res) => {
+        res.sendFile(path.resolve(`${__dirname}/${website_location}/index.html`));
+    })
+}
 //
-const reserved_links = [redirect_url_not_found.substring(1)]
+const reserved_links = [redirect_url_not_found.substring(1), "stats", "faq", ""]
 app.get("/:SHORT_URL", async (req, res, next) => {
     const { SHORT_URL } = req.params
     if(!SHORT_URL) return send_error(res, 404)
@@ -71,6 +86,9 @@ app.post("/create", async (req, res) => {
         return send_error(res, 400, ans)
     }
     //
+    if(!req.body.url.startsWith("http://") && !req.body.url.startsWith("https://")) {
+        req.body.url = "https://" + req.body.url
+    }
     if(!validate_url(req.body.url)) {
         ans.message = "Invalid URL link"
         return send_error(res, 400, ans)
@@ -104,7 +122,7 @@ app.post("/create", async (req, res) => {
     await insert_short_url(document)
     //
     ans.success = true
-    ans.message = "Successfully created new short url"
+    ans.message = "Successfully created new short URL"
     ans.result = short_url
     //
     res.status(200).json(ans)
@@ -151,7 +169,7 @@ app.get("*", (req, res) => {
 })
 //
 function validate_url(url) {
-    // if(!url.startsWith("http")) return false
+    if(!url.startsWith("http://") && !url.startsWith("https://")) return false
     if(!url.includes(".")) return false
     if(url.split(".")[0].length == 0 || url.split(".")[1].length == 0) return false
     if(url.split(".").reverse()[0].length == 0) return false

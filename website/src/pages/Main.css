@@ -1,0 +1,183 @@
+body {
+    background-color: #272829;
+    color: #FFF6E0;
+    font-family: 'Jura';
+    text-align: center;
+}
+
+h1 {
+    font-size: 60px;
+    font-weight: lighter;
+}
+
+#long-url-text-input {
+    border-radius: 25px;
+    background-color: #272829;
+    outline: none;
+    border: none;
+    width: 50%;
+    max-width: 750px;
+    height: 60px;
+    padding: 10px;
+    padding-left: 20px;
+    margin: 30px;
+    color: #FFF6E0;
+    font-family: 'Jura';
+    font-size: 20px;
+}
+#shorten-button {
+    border-radius: 25px;
+    background-color: #272829;
+    outline: none;
+    border: none;
+    height: 60px;
+    padding: 10px;
+    padding-top: 5px;
+    color: #FFF6E0;
+    font-family: 'Jura';
+    font-size: 25px;
+    cursor: pointer;
+}
+#long-url-text-input, #shorten-button, #advanced-button {
+    box-sizing: border-box;
+}
+#long-url-text-input:hover,
+#shorten-button:hover,
+#advanced-button:hover,
+#advanced-max-uses-input:hover,
+#advanced-expiration-date-input:hover,
+
+#long-url-text-input:focus,
+#advanced-max-uses-input:focus,
+#advanced-expiration-date-input:focus {
+    box-shadow: -2px -2px 2px 0px rgba(255, 246, 224, 0.25) inset, 2px 2px 2px 0px rgba(0, 0, 0, 0.25) inset;
+}
+#long-url-text-input:active,
+#shorten-button:active,
+#advanced-button:active,
+#advanced-max-uses-input:active,
+#advanced-expiration-date-input:active {
+    box-shadow: -3px -3px 3px 0px rgba(255, 246, 224, 0.25) inset, 3px 3px 3px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+#advanced-button {
+    border-radius: 25px;
+    background-color: #272829;
+    outline: none;
+    border: none;
+    height: 30px;
+    width: 125px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    color: #FFF6E0;
+    font-family: 'Jura';
+    font-size: 14px;
+    cursor: pointer;
+}
+#advanced-box-all {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.advanced-box-one {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 1500px;
+    margin: 20px 40px 0 40px;
+}
+.advanced-box-one p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 13.5px 0 13.5px 0;
+}
+#advanced-max-uses-input, #advanced-expiration-date-input {
+    box-sizing: border-box;
+    border-radius: 25px;
+    background-color: #272829;
+    outline: none;
+    border: none;
+    height: 30px;
+    padding: 10px;
+    padding-left: 20px;
+    margin: 10px 0;
+    color: #FFF6E0;
+    font-family: 'Jura';
+    font-size: 18px;
+    text-align: center;
+    width: 200px;
+    align-self: flex-start;
+}
+.advanced-box-fade-in {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.advanced-box-hidden {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: visibility 0s 0.2s, opacity 0.2s ease, transform 0.2s ease;
+}
+
+#alert-box {
+    font-size: 18px;
+    font-weight: bold;
+    width: fit-content;
+    padding: 15px;
+    border-radius: 25px;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    margin: 40px auto;
+}
+.alert-box-red {
+    box-shadow: 0px 0px 20px -5px #ed4245;
+}
+.alert-box-yellow {
+    box-shadow: 0px 0px 20px -5px #fee65c;
+}
+.alert-box-green {
+    box-shadow: 0px 0px 20px -5px #57f288;
+}
+
+.shake-animation {
+    animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    padding: 25px;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+.on-top-shadow {
+    box-shadow: -2px -2px 2px 0px rgba(255, 246, 224, 0.25), 2px 2px 2px 0px rgba(0, 0, 0, 0.25);
+}
