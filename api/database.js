@@ -8,12 +8,12 @@ let documents_to_update_queue = []
 async function connect_mongodb(){
     console.log("Starting MongoDB connection")
     //
-    const client = new MongoClient(mongodb_uri)
+    const client = new MongoClient(process.env.MONGODB_URI || mongodb_uri)
     //
     await client.connect()
     console.log("MongoDB successfully connected")
     //
-    const db = client.db(mongodb_db_name)
+    const db = client.db(process.env.MONGODB_DB_NAME || mongodb_db_name)
     database = db
     //
     urls_collection = database.collection("urls")
