@@ -7,7 +7,7 @@ This project includes API and React.js app for frontend
 
 ### Redirect from short to long URL
 
-```http
+```
   GET /${SHORT_CODE}
 ```
 
@@ -15,7 +15,7 @@ This project includes API and React.js app for frontend
 | :- | :- | :- | :- |
 | `SHORT_CODE` | `string` | yes | Code from short URL |
 
-**Response**
+**Response**  
 Redirects to long URL or to /404 if not found
 
 
