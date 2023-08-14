@@ -1,9 +1,23 @@
 
-# 🔗 URL Shortener 🔗
+# 🔗 URL Shortener
 
-This project includes API and React.js app for frontend
+This project includes backend API (using [express.js](https://expressjs.com/) and [MongoDB](https://www.mongodb.com/)) and frontend (using [React.js](https://react.dev/)). With this project I wanted to learn some React.js so frontend is not perfect. <br />
+This is a simple URL shortener that converts long links to short ones. And then it redirects the user from the short URL to the long equivalent. <br />
+
+## 💻 Preview
+
+Live preview: [vercel.com](https://vercel.com/)
+
+
+![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607198276366446/image.png)
+
+![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607519736205322/image.png)
+
+![Main Page](https://cdn.discordapp.com/attachments/1133735893715386438/1140609019183108136/image.png)
+
 
 ## API Reference
+
 
 ### Redirect from short to long URL
 
@@ -15,7 +29,7 @@ This project includes API and React.js app for frontend
 | :- | :- | :- | :- |
 | `SHORT_CODE` | `string` | yes | Code from short URL |
 
-**Response**  <br />
+**Response** <br />
 Redirects to long URL or to /404 if not found
 
 
@@ -23,7 +37,7 @@ Redirects to long URL or to /404 if not found
 
 ### Create short URL
 
-```http
+```
   POST /create
 ```
 
@@ -33,7 +47,7 @@ Redirects to long URL or to /404 if not found
 | `expiration_timestamp` | `timestamp` | no | Short URL expiration date, no more than one year |
 | `max_uses` | `number` | no | Max number of short URL uses |
 
-**Response**
+**Response**  
 ```javascript
 {
     success: boolean,
@@ -82,7 +96,3 @@ Redirects to long URL or to /404 if not found
 | `expiration_timestamp` | Short URL expiration date |
 | `uses` | Number of short URL uses |
 | `max_uses` | Maximum number of short URL uses or `-1` if unlimited |
-
-
-
-
