@@ -1,7 +1,6 @@
 import './Stats.css';
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import config from "../config"
 //
 const Stats = () => {
     const navigate = useNavigate();
@@ -18,7 +17,7 @@ const Stats = () => {
     function fetch_stats() {
         if(!shorturl_param) return
         //
-        fetch(`${config.api_address}/stats/${shorturl_param || "-"}`, {
+        fetch(`${process.env.REACT_APP_API_ADDRESS}/stats/${shorturl_param || "-"}`, {
             method: 'POST',
         }).then(response => response.json())
         .then(data => {
@@ -30,7 +29,7 @@ const Stats = () => {
                 //
                 return
             }
-            setShortURL(`${config.domain}/${data.short_url}`)
+            setShortURL(`${process.env.REACT_APP_DOMAIN}/${data.short_url}`)
             //
             let longurl = data.long_url
             if(longurl.length > 35) {
@@ -64,7 +63,9 @@ const Stats = () => {
     function handleSumbit(event) {
         event.preventDefault()
         //
-        navigate(`/stats?shorturl=${shortURL.split(`${config.domain}/`)[1]}`)
+        if(shorturl_param) return
+        //
+        navigate(`/stats?shorturl=${shortURL.split(`${process.env.REACT_APP_REAL_DOMAIN}/`)[1]}`)
     }
     //
     useEffect(() => {
@@ -78,16 +79,16 @@ const Stats = () => {
     }, [shorturl_param]) 
     //
     function handleShortURLChange(event) {
-        if(shortURL.startsWith(config.domain) || event.target.value.startsWith(config.domain)) {
+        if(shortURL.startsWith(process.env.REACT_APP_DOMAIN) || event.target.value.startsWith(process.env.REACT_APP_DOMAIN)) {
             setShortURL(`${event.target.value}`)
         } else {
-            setShortURL(`${config.domain}/${event.target.value}`)
+            setShortURL(`${process.env.REACT_APP_DOMAIN}/${event.target.value}`)
         }
     }
     //
     function handleCopy() {
         if(!shorturl_param || shorturl_param.length === 0) return
-        navigator.clipboard.writeText(`${config.real_domain}/${shorturl_param}`)
+        navigator.clipboard.writeText(`${process.env.REACT_APP_REAL_DOMAIN}/${shorturl_param}`)
             .then(() => {
                 setAlertBox({ display: true, value: "Copied to clipboard", color: "green" })
                 clearAlertBox()

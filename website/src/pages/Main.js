@@ -1,12 +1,7 @@
 import './Main.css';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import config from "../config"
 //
-/*
-To-Do:
- - dodać komentarze
-*/
 //
 function Main() {
     const [displayAdvancedBox, setDisplayAdvancedBox] = useState(false)
@@ -50,7 +45,7 @@ function Main() {
             } catch (error) { }
         }
         //
-        fetch(`${config.api_address}/create`, {
+        fetch(`${process.env.REACT_APP_API_ADDRESS}/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

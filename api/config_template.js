@@ -1,10 +1,4 @@
 module.exports = {
-    port_http: 8080,
-    port_https: 8081,
-    //
-    mongodb_uri: "MONGO_DB_URI_ADDRESS",
-    mongodb_db_name: "MONGO_DB_NAME",
-    //
     redirect_url_not_found: "/404",
     //
     short_url_allowed_characters: "ABCDEFGHKMNPQRSTUVWXYZabcdefghkmnpqrstuvwxyz0123456789", // [A-Z], [a-z], [0-9] / Without I,J,L,O,i,j,l,o because they are easy to missprehent

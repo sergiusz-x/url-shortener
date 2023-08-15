@@ -13,7 +13,7 @@ Live preview: [vercel.com](https://vercel.com/)
 
 ![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607519736205322/image.png)
 
-![Main Page](https://cdn.discordapp.com/attachments/1133735893715386438/1140609019183108136/image.png)
+![Stats Page](https://cdn.discordapp.com/attachments/1133735893715386438/1140609019183108136/image.png)
 
 
 ## API Reference

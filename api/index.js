@@ -1,12 +1,19 @@
 const express = require("express")
 const https = require('https')
 const http = require('http')
-const path = require('path');
-const { port_http, port_https, redirect_url_not_found, short_url_allowed_characters, short_url_length, create_request_limiter, website_location, host_website } = require("./config")
+const path = require('path')
+const fs = require('fs')
+require('dotenv').config()
+const { redirect_url_not_found, short_url_allowed_characters, short_url_length, create_request_limiter, website_location, host_website } = require("./config")
 //
 const app = express()
 //
-const https_server = https.createServer(app)
+const privateKey  = fs.readFileSync(`${__dirname}/certificate/private.key`, 'utf8')
+const certificate = fs.readFileSync(`${__dirname}/certificate/certificate.crt`, 'utf8')
+const bundle1 = fs.readFileSync(`${__dirname}/certificate/ca_bundle.crt`, 'utf8')
+// 
+const credentials = { key: privateKey.toString(), cert: certificate.toString(), ca: [bundle1.toString()] }
+const https_server = https.createServer(credentials, app)
 const http_server = http.createServer(app)
 //
 app.use(express.json())
@@ -43,6 +50,7 @@ app.get("/:SHORT_URL", async (req, res, next) => {
     if(!SHORT_URL) return send_error(res, 404)
     //
     if(reserved_links.includes(SHORT_URL)) return next()
+    //  
     if(SHORT_URL.length != short_url_length || !validate_short_url_string(SHORT_URL)) return res.redirect(308, redirect_url_not_found)
     //
     const find = await find_url(SHORT_URL, undefined, true)
@@ -165,7 +173,11 @@ app.post("/stats/:SHORT_URL", async (req, res) => {
 })
 //
 app.get("*", (req, res) => {
-    send_error(res, 404)
+    if(host_website) {
+        res.sendFile(path.resolve(`${__dirname}/${website_location}/index.html`));
+    } else {
+        send_error(res, 404)
+    }
 })
 //
 function validate_url(url) {
@@ -196,9 +208,9 @@ function send_error(res, code, ans) {
     res.send("Error 500")
 }
 //
-http_server.listen(port_http, () => {
-    console.log(`API HTTP  working on port ${port_http}`)
+http_server.listen(process.env.PORT_HTTP, () => {
+    console.log(`API HTTP  working on port ${process.env.PORT_HTTP}`)
 })
-https_server.listen(port_https, () => {
-    console.log(`API HTTPS working on port ${port_https}`)
+https_server.listen(process.env.PORT_HTTPS, () => {
+    console.log(`API HTTPS working on port ${process.env.PORT_HTTPS}`)
 })
