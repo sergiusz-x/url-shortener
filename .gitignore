@@ -1,6 +1,5 @@
 node_modules/
 jspm_packages/
 package-lock.json
-config.js
 certificate/
 .env
