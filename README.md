@@ -65,7 +65,7 @@ Redirects to long URL or to /404 if not found
 
 ### Get short URL statistics
 
-```http
+```
   POST /stats/${SHORT_CODE}
 ```
 
