@@ -1,4 +1,3 @@
-
 # 🔗 URL Shortener
 
 This project includes backend API (using [express.js](https://expressjs.com/) and [MongoDB](https://www.mongodb.com/)) and frontend (using [React.js](https://react.dev/)). With this project I wanted to learn some React.js so frontend is not perfect. <br />
@@ -6,8 +5,7 @@ This is a simple URL shortener that converts long links to short ones. And then 
 
 ## 💻 Preview
 
-Live preview: [vercel.com](https://vercel.com/)
-
+![GIF](https://cdn.discordapp.com/attachments/1133735893715386438/1144290156053012560/url-shortener.gif)
 
 ![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607198276366446/image.png)
 

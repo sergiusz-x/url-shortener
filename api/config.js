@@ -9,7 +9,7 @@ module.exports = {
         time: 1000 * 60
     },
     //
-    host_website: false,
+    host_website: true,
     website_location: "/../website/build",
     //
 }
