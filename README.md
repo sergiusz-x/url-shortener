@@ -6,8 +6,6 @@ This is a simple URL shortener that converts long links to short ones. And then 
 
 ## 💻 Preview
 
-Live preview: [vercel.com](https://vercel.com/)
-
 
 ![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607198276366446/image.png)
 
