@@ -5,13 +5,13 @@ This is a simple URL shortener that converts long links to short ones. And then 
 
 ## 💻 Preview
 
-![GIF](https://cdn.discordapp.com/attachments/1133735893715386438/1144290156053012560/url-shortener.gif)
+![MP4](https://github.com/sergiusz-x/url-shortener/raw/main/readme/url-shortener.mp4)
 
-![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607198276366446/image.png)
+![Main Page](https://github.com/sergiusz-x/url-shortener/blob/main/readme/main_page_1.png)
 
-![Main Page](https://media.discordapp.net/attachments/1133735893715386438/1140607519736205322/image.png)
+![Main Page](https://github.com/sergiusz-x/url-shortener/blob/main/readme/main_page_2.png)
 
-![Stats Page](https://cdn.discordapp.com/attachments/1133735893715386438/1140609019183108136/image.png)
+![Stats Page](https://github.com/sergiusz-x/url-shortener/blob/main/readme/stats_page.png)
 
 
 ## API Reference
