@@ -5,6 +5,7 @@ This is a simple URL shortener that converts long links to short ones. And then 
 
 ## 💻 Preview
 
+https://github.com/sergiusz-x/url-shortener/raw/main/readme/url-shortener.mp4
 ![MP4](https://github.com/sergiusz-x/url-shortener/raw/main/readme/url-shortener.mp4)
 
 ![Main Page](https://github.com/sergiusz-x/url-shortener/blob/main/readme/main_page_1.png)
